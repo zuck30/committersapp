@@ -6,6 +6,7 @@ import { UserDialog } from "@/components/common";
 import { Header } from "../components/common/Header";
 import { CountryCard } from "@/components/common/CountryCard";
 import { useInfiniteScroll } from "@/hooks/useInfiniteScroll";
+import { Search } from "lucide-react";
 
 const COUNTRIES_PER_PAGE = 20;
 
@@ -13,19 +14,28 @@ const Home = () => {
   const { data: allCountries = [], isLoading } = useGetCountriesQuery();
   const [selectedUser, setSelectedUser] = useState<Committer | null>(null);
   const [visibleCount, setVisibleCount] = useState(COUNTRIES_PER_PAGE);
+  const [search, setSearch] = useState("");
 
-  const visibleCountries = useMemo(
-    () => allCountries.slice(0, visibleCount),
-    [allCountries, visibleCount],
-  );
+  const filteredCountries = useMemo(() => {
+    if (!search.trim()) return allCountries;
 
-  const hasMoreCountries = visibleCount < allCountries.length;
+    const query = search.toLowerCase().trim();
+    return allCountries.filter(
+      (country) =>
+        country.name.toLowerCase().includes(query) ||
+        country.slug.toLowerCase().includes(query),
+    );
+  }, [allCountries, search]);
+
+  const visibleCountries = useMemo(() => {
+    return filteredCountries.slice(0, visibleCount);
+  }, [filteredCountries, visibleCount]);
+
+  const hasMoreCountries = visibleCount < filteredCountries.length;
 
   const handleLoadMore = () => {
     if (!isLoading && hasMoreCountries) {
-      setVisibleCount((prev) =>
-        Math.min(prev + COUNTRIES_PER_PAGE, allCountries.length),
-      );
+      setVisibleCount((prev) => prev + COUNTRIES_PER_PAGE);
     }
   };
 
@@ -50,7 +60,36 @@ const Home = () => {
         <Header />
       </div>
 
-      <div className="grid grid-cols-3 sm:grid-cols-1 gap-6">
+      <div className="mb-4">
+        <div className="relative max-w-md mx-auto">
+          <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+          <input
+            type="text"
+            value={search}
+            onChange={(e) => {
+              setSearch(e.target.value);
+              setVisibleCount(COUNTRIES_PER_PAGE);
+            }}
+            placeholder="Search countries..."
+            className="w-full pl-12 pr-4 py-3 border rounded-2xl bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700 focus:outline-none focus:border-blue-300 dark:focus:border-blue-700 text-gray-800 dark:text-gray-200"
+          />
+          {search && (
+            <button
+              onClick={() => setSearch("")}
+              className="absolute right-4 top-1/2 transform -translate-y-1/2 text-sm text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"
+            >
+              Clear
+            </button>
+          )}
+        </div>
+        {search && (
+          <p className="text-center mt-2 text-sm text-gray-600 dark:text-gray-400">
+            Found {filteredCountries.length} countries
+          </p>
+        )}
+      </div>
+
+      <div className="grid grid-cols-3 gap-6">
         {isLoading && visibleCountries.length === 0
           ? [...Array(12)].map((_, i) => (
               <div
@@ -95,6 +134,26 @@ const Home = () => {
               />
             ))}
       </div>
+
+      {!isLoading && search && filteredCountries.length === 0 && (
+        <div className="text-center py-12">
+          <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center">
+            <Search className="w-8 h-8 text-gray-400 dark:text-gray-500" />
+          </div>
+          <h3 className="text-lg font-medium text-gray-800 dark:text-gray-200 mb-2">
+            No countries found
+          </h3>
+          <p className="text-gray-600 dark:text-gray-400 mb-4">
+            Try a different search term
+          </p>
+          <button
+            onClick={() => setSearch("")}
+            className="text-blue-600 dark:text-blue-400 hover:underline"
+          >
+            Clear search
+          </button>
+        </div>
+      )}
 
       {hasMoreCountries && (
         <div className="flex flex-col items-center my-8">
