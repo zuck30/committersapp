@@ -2,6 +2,7 @@ import { BrowserRouter as Router } from "react-router-dom";
 import { ToastContainer } from "react-fox-toast";
 import AppRoutes from "./routes";
 import { Footer } from "./components/common";
+import GoToTop from "./components/common/GoToTop";
 
 const App = () => {
   return (
@@ -10,7 +11,9 @@ const App = () => {
         <main className="mx-auto px-[200px] sm:px-1 sm:py-0 py-4">
           <AppRoutes />
         </main>
+
         <Footer />
+        <GoToTop />
         <ToastContainer position="top-right" />
       </div>
     </Router>
