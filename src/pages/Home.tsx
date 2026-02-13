@@ -7,10 +7,12 @@ import { UserDialog } from "@/components/common";
 import { Header } from "../components/common/Header";
 import { CountryCard } from "@/components/common/CountryCard";
 import { useInfiniteScroll } from "@/hooks/useInfiniteScroll";
-import { Search, Globe } from "lucide-react";
+import { Search, Globe, ArrowDownAZ, ArrowUpAZ } from "lucide-react";
 import { ContinentNav } from "@/components/common/ContinentNav";
 
 const COUNTRIES_PER_PAGE = 20;
+
+type SortDirection = "asc" | "desc";
 
 const Home = () => {
   const { data: allCountries = [], isLoading: isLoadingCountries } =
@@ -22,6 +24,7 @@ const Home = () => {
   const [search, setSearch] = useState("");
   const [isContinentSort, setIsContinentSort] = useState(false);
   const [activeContinent, setActiveContinent] = useState<string>("");
+  const [sortOrder, setSortOrder] = useState<SortDirection>("asc");
 
   const countryToContinent = useMemo(() => {
     const map: Record<string, string> = {};
@@ -32,14 +35,29 @@ const Home = () => {
   }, [flagsData]);
 
   const filteredCountries = useMemo(() => {
-    if (!search.trim()) return allCountries;
-    const query = search.toLowerCase().trim();
-    return allCountries.filter(
-      (country) =>
-        country.name.toLowerCase().includes(query) ||
-        country.slug.toLowerCase().includes(query),
-    );
-  }, [allCountries, search]);
+    let filtered = [...allCountries];
+
+    if (search.trim()) {
+      const query = search.toLowerCase().trim();
+      filtered = filtered.filter(
+        (country) =>
+          country.name.toLowerCase().includes(query) ||
+          country.slug.toLowerCase().includes(query),
+      );
+    }
+
+    filtered.sort((a, b) => {
+      const nameA = a.name.toLowerCase();
+      const nameB = b.name.toLowerCase();
+      if (sortOrder === "asc") {
+        return nameA.localeCompare(nameB);
+      } else {
+        return nameB.localeCompare(nameA);
+      }
+    });
+
+    return filtered;
+  }, [allCountries, search, sortOrder]);
 
   const grouped = useMemo(() => {
     if (!isContinentSort) return null;
@@ -49,6 +67,7 @@ const Home = () => {
       if (!groups[cont]) groups[cont] = [];
       groups[cont].push(c);
     });
+
     return Object.keys(groups)
       .sort()
       .reduce(
@@ -101,6 +120,11 @@ const Home = () => {
     if (element) element.scrollIntoView({ behavior: "smooth" });
   };
 
+  const toggleSort = () => {
+    setSortOrder((prev) => (prev === "asc" ? "desc" : "asc"));
+    setVisibleCount(COUNTRIES_PER_PAGE);
+  };
+
   return (
     <div className="max-w-7xl mx-auto p-4 relative min-h-screen">
       <Helmet>
@@ -110,6 +134,7 @@ const Home = () => {
       <div className="mb-[60px] sm:mb-[65px]">
         <Header />
       </div>
+
       <div className="mb-5 flex items-center justify-center gap-3 max-w-2xl mx-auto">
         <div className="relative flex-1">
           <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
@@ -124,6 +149,17 @@ const Home = () => {
             className="w-full pl-12 pr-4 py-[10px] border rounded-2xl bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-gray-800 dark:text-gray-200 shadow-sm "
           />
         </div>
+
+        <button
+          onClick={toggleSort}
+          className="flex items-center justify-center p-[10px] w-[46px] h-[46px] border rounded-2xl bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 transition-all active:scale-95 shadow-sm text-gray-600 dark:text-gray-400"
+        >
+          {sortOrder === "asc" ? (
+            <ArrowDownAZ className="w-5 h-5 text-blue-500" />
+          ) : (
+            <ArrowUpAZ className="w-5 h-5 text-blue-500" />
+          )}
+        </button>
 
         <ContinentNav
           isContinentSort={isContinentSort}

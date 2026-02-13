@@ -152,11 +152,13 @@ export const ContinentNav = ({
             onClick={() => setVisible(!visible)}
             className={`relative p-3 rounded-2xl border transition-all active:scale-95 shadow-lg ${
               isContinentSort
-                ? "bg-blue-600 text-white border-blue-500"
+                ? "bg-blue-600 border-blue-500"
                 : "bg-white dark:bg-gray-900 text-gray-600 border-gray-200 dark:border-gray-700"
             }`}
           >
-            <LayoutGrid className="w-5 h-5" />
+            <LayoutGrid
+              className={`w-5 h-5 ${isContinentSort ? "text-white" : "text-blue-500"}`}
+            />
             {isContinentSort && (
               <span className="absolute -top-1 -right-1 flex h-3 w-3">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
