@@ -131,15 +131,6 @@ export const ContinentNav = ({
                       )}
                     </button>
                   ))}
-                  <button
-                    onClick={() => {
-                      window.scrollTo({ top: 0, behavior: "smooth" });
-                      setVisible(false);
-                    }}
-                    className="flex items-center justify-center gap-2 py-3 mt-1 text-[10px] font-bold text-gray-400 uppercase"
-                  >
-                    <ArrowUp className="w-3 h-3" /> Back to Top
-                  </button>
                 </div>
               ) : (
                 <div className="py-6 px-4 text-center">
