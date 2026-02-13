@@ -17,188 +17,141 @@ import "tippy.js/dist/tippy.css";
 
 interface FilterBarProps {
   mode: Mode;
-  setMode: (mode: Mode) => void;
+  sortBy: SortOption;
+  isFetching: boolean;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   refetch: () => Promise<any>;
-  sortBy: SortOption;
-  setSortBy: (val: SortOption) => void;
 }
 
 export const FilterBar = ({
   mode,
-  setMode,
   refetch,
   sortBy,
-  setSortBy,
+  isFetching,
 }: FilterBarProps) => {
   const [searchParams, setSearchParams] = useSearchParams();
   const urlSearch = searchParams.get("search") || "";
   const [inputValue, setInputValue] = useState(urlSearch);
-  const [isRefreshing, setIsRefreshing] = useState(false);
-
-  const urlSort = searchParams.get("sort") as SortOption;
-  useEffect(() => {
-    if (urlSort && urlSort !== sortBy) setSortBy(urlSort);
-  }, [urlSort, sortBy, setSortBy]);
+  const [internalLoading, setInternalLoading] = useState(false);
 
   useEffect(() => {
     const handler = setTimeout(() => {
       const newParams = new URLSearchParams(searchParams);
-
-      if (inputValue.trim()) newParams.set("search", inputValue.trim());
-      else newParams.delete("search");
-
-      setSearchParams(newParams);
-    }, 300);
+      if (inputValue.trim()) {
+        newParams.set("search", inputValue.trim());
+      } else {
+        newParams.delete("search");
+      }
+      setSearchParams(newParams, { replace: true });
+    }, 400);
 
     return () => clearTimeout(handler);
-  }, [inputValue, searchParams, setSearchParams]);
+  }, [inputValue, setSearchParams, searchParams]);
 
   useEffect(() => {
     setInputValue(urlSearch);
   }, [urlSearch]);
 
-  const onModeChange = (newMode: Mode) => {
-    setMode(newMode);
-
+  const updateParam = (key: string, value: string) => {
     const newParams = new URLSearchParams(searchParams);
-    if (newMode === "commits") newParams.delete("mode");
-    else newParams.set("mode", newMode);
-
+    if (value === "commits" && key === "mode") {
+      newParams.delete(key);
+    } else {
+      newParams.set(key, value);
+    }
     setSearchParams(newParams);
-    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  const handleClearSearch = () => setInputValue("");
-
   const handleRefetch = async () => {
-    setIsRefreshing(true);
+    setInternalLoading(true);
     try {
       const result = await refetch();
-      if ("error" in result) {
-        Toast("error", "Error updating data");
-      } else if ("data" in result) {
-        Toast("success", "Data updated successfully");
+      if (result.error) {
+        Toast("error", "Failed to refresh data");
       } else {
-        Toast("info", "Update completed");
+        Toast("success", "Ranking updated");
       }
     } catch {
-      Toast("error", "Error updating data");
+      Toast("error", "Update failed");
     } finally {
-      setTimeout(() => setIsRefreshing(false), 600);
+      setInternalLoading(false);
     }
   };
 
   return (
-    <div className="mb-6 py-2 sticky top-0 z-20 flex sm:flex-col flex-row items-center w-full justify-between sm:gap-4 backdrop-blur-lg rounded-md">
-      <div className="flex items-center gap-2 sm:gap-4 sm:w-full">
-        <ToggleGroup
-          type="single"
-          value={mode}
-          onValueChange={(val) => val && onModeChange(val as Mode)}
-          className="inline-flex rounded-lg bg-gray-200 sm:w-full dark:bg-gray-800 p-2"
-        >
-          {["commits", "contributions", "all"].map((value) => (
-            <ToggleGroupItem
-              key={value}
-              value={value}
-              aria-label={value}
-              className="cursor-pointer select-none rounded-md px-5 sm:px-4 py-2 sm:py-4
-          text-gray-700 dark:text-gray-300
-          data-[state=on]:bg-blue-600 dark:data-[state=on]:bg-blue-600 bg-gray-300 dark:bg-gray-900 data-[state=on]:text-white
-          transition-colors ease-in-out
-          hover:bg-blue-500 hover:text-white"
-            >
-              {value === "commits"
-                ? "Commits"
-                : value === "contributions"
-                  ? "Contributions"
-                  : "All"}
-            </ToggleGroupItem>
-          ))}
-        </ToggleGroup>
-        <Tippy
-          content="Reload the data"
-          animation="shift-away"
-          duration={400}
-          placement="right"
-        >
-          <button
-            onClick={handleRefetch}
-            className="w-10 h-10 flex items-center justify-center rounded transition 
-               hover:scale-110 active:scale-95"
+    <div className="sticky top-[60px] z-30 mb-8 p-2 backdrop-blur-xl bg-white/10 dark:bg-gray-950/10 border-[1px] border-gray-200 dark:border-gray-800 rounded-2xl shadow-sm">
+      <div className="flex sm:flex-col flex-row items-center justify-between gap-3">
+        <div className="flex items-center gap-3 sm:gap-1 w-full sm:w-auto">
+          <ToggleGroup
+            type="single"
+            value={mode}
+            onValueChange={(val) => val && updateParam("mode", val)}
+            className="flex p-1 bg-gray-200/50 dark:bg-gray-900/90 rounded-xl w-full sm:w-auto"
           >
-            <RefreshCw
-              className={`w-6 h-6 text-gray-600 dark:text-gray-300 transition-transform duration-300 ${
-                isRefreshing ? "animate-spinOnce" : ""
-              }`}
-            />
-          </button>
-        </Tippy>
-      </div>
-      <div className="flex sm:flex-col sm:w-full items-center gap-2">
-        <Select
-          value={sortBy}
-          onValueChange={(val) => {
-            setSortBy(val as SortOption);
-            const newParams = new URLSearchParams(searchParams);
-            newParams.set("sort", val);
-            setSearchParams(newParams);
-          }}
-        >
-          <SelectTrigger className="py-5 h-[42px] sm:w-full text-black dark:text-white border-gray-300 dark:border-gray-700 bg-white/90 dark:bg-gray-900">
-            <SelectValue placeholder="Sort by" />
-          </SelectTrigger>
-          <SelectContent className="bg-white/90 text-black dark:text-white dark:bg-gray-900/90">
-            <SelectItem className="hover:cursor-pointer" value="commits-desc">
-              Commits (High → Low)
-            </SelectItem>
-            <SelectItem className="hover:cursor-pointer" value="commits-asc">
-              Commits (Low → High)
-            </SelectItem>
-            <SelectItem
-              className="hover:cursor-pointer"
-              value="alphabetical-asc"
+            {["commits", "contributions", "all"].map((v) => (
+              <ToggleGroupItem
+                key={v}
+                value={v}
+                className="flex-1 sm:flex-none px-4 py-2 rounded-lg capitalize text-sm font-medium transition-all
+                  hover:bg-white/80 dark:hover:bg-gray-800/80 hover:text-blue-600
+                  data-[state=on]:bg-white dark:data-[state=on]:bg-gray-800 
+                  data-[state=on]:text-blue-600 dark:data-[state=on]:text-blue-400 
+                  data-[state=on]:shadow-sm data-[state=on]:hover:bg-white dark:data-[state=on]:hover:bg-gray-800"
+              >
+                {v}
+              </ToggleGroupItem>
+            ))}
+          </ToggleGroup>
+
+          <Tippy content="Refresh database" placement="top">
+            <button
+              onClick={handleRefetch}
+              disabled={isFetching || internalLoading}
+              className="p-3 rounded-xl bg-gray-200/50 dark:bg-gray-900/90 text-gray-500 hover:text-blue-600 
+                disabled:opacity-50 transition-all hover:scale-105 active:scale-95"
             >
-              Alphabetical (A → Z)
-            </SelectItem>
-            <SelectItem
-              className="hover:cursor-pointer"
-              value="alphabetical-desc"
-            >
-              Alphabetical (Z → A)
-            </SelectItem>
-          </SelectContent>
-        </Select>
-        <div className="relative sm:w-full ml-0 sm:ml-auto flex items-center gap-1 sm:gap-0">
-          <Input
-            type="text"
-            placeholder="Search by username..."
-            value={inputValue}
-            onChange={(e) => setInputValue(e.target.value)}
-            className="h-[42px] px-10 py-4 sm:py-5 border border-gray-300 dark:border-gray-700 
-            rounded-lg shadow-sm
-            focus:border-blue-500 focus:ring-2 focus:ring-blue-400 focus:ring-opacity-50
-            hover:border-blue-400 hover:shadow-lg
-             ease-[cubic-bezier(0.25,0.1,0.25,1)] 
-            bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm
-            hover:bg-white dark:hover:bg-gray-900
-            focus:bg-white dark:focus:bg-gray-900
-            placeholder-gray-400 dark:placeholder-gray-500
-            text-gray-800 dark:text-gray-200
-            outline-none"
-          />
-          <Search
-            size={20}
-            className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none"
-          />
-          {inputValue && (
-            <X
-              size={18}
-              onClick={handleClearSearch}
-              className="absolute right-12 top-1/2 -translate-y-1/2 text-gray-400 cursor-pointer hover:text-red-500 transition-colors hover:scale-110"
+              <RefreshCw
+                className={`w-5 h-5 ${isFetching || internalLoading ? "animate-spin" : ""}`}
+              />
+            </button>
+          </Tippy>
+        </div>
+
+        <div className="flex sm:flex-col flex-row items-center gap-3 w-full">
+          <Select
+            value={sortBy}
+            onValueChange={(val) => updateParam("sort", val)}
+          >
+            <SelectTrigger className="w-full sm:w-full md:w-[180px] h-11 rounded-xl bg-gray-200/50 dark:bg-gray-900/90 border-none focus:ring-2 focus:ring-blue-500/20 text-gray-800 dark:text-gray-200">
+              <SelectValue placeholder="Sort by" />
+            </SelectTrigger>
+            <SelectContent className="backdrop-blur-xl bg-white/90 dark:bg-gray-950/90 border-gray-200 dark:border-gray-800">
+              <SelectItem value="commits-desc">Most Commits</SelectItem>
+              <SelectItem value="commits-asc">Least Commits</SelectItem>
+              <SelectItem value="alphabetical-asc">Name (A-Z)</SelectItem>
+              <SelectItem value="alphabetical-desc">Name (Z-A)</SelectItem>
+            </SelectContent>
+          </Select>
+
+          <div className="relative w-full sm:w-full md:w-[260px]">
+            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+            <Input
+              placeholder="Search user..."
+              value={inputValue}
+              onChange={(e) => setInputValue(e.target.value)}
+              className="h-11 pl-10 pr-10 rounded-xl bg-gray-200/50 dark:bg-gray-900/90 border-none 
+                placeholder:text-gray-500 text-gray-800 dark:text-gray-200 focus-visible:ring-2 focus-visible:ring-blue-500/20"
             />
-          )}
+            {inputValue && (
+              <button
+                onClick={() => setInputValue("")}
+                className="absolute right-3 top-1/2 -translate-y-1/2 p-1 rounded-full 
+                  hover:bg-gray-300 dark:hover:bg-gray-800 transition-colors"
+              >
+                <X className="w-3.5 h-3.5 text-gray-400" />
+              </button>
+            )}
+          </div>
         </div>
       </div>
     </div>

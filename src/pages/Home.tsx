@@ -146,13 +146,13 @@ const Home = () => {
               setVisibleCount(COUNTRIES_PER_PAGE);
             }}
             placeholder="Search countries..."
-            className="w-full pl-12 pr-4 py-[10px] border rounded-2xl bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-gray-800 dark:text-gray-200 shadow-sm "
+            className="w-full pl-12 pr-4 py-[10px] border rounded-2xl bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-gray-800 dark:text-gray-200 shadow-lg"
           />
         </div>
 
         <button
           onClick={toggleSort}
-          className="flex items-center justify-center p-[10px] w-[46px] h-[46px] border rounded-2xl bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 transition-all active:scale-95 shadow-sm text-gray-600 dark:text-gray-400"
+          className="flex items-center justify-center p-[10px] w-[46px] h-[46px] border rounded-2xl bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 transition-all shadow-lg text-gray-600 dark:text-gray-400"
         >
           {sortOrder === "asc" ? (
             <ArrowDownAZ className="w-5 h-5 text-blue-500" />

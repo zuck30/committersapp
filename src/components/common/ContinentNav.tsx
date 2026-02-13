@@ -150,7 +150,7 @@ export const ContinentNav = ({
         >
           <button
             onClick={() => setVisible(!visible)}
-            className={`relative p-3 rounded-2xl border transition-all active:scale-95 shadow-lg ${
+            className={`relative p-3 rounded-2xl border transition-all shadow-lg ${
               isContinentSort
                 ? "bg-blue-600 border-blue-500"
                 : "bg-white dark:bg-gray-900 text-gray-600 border-gray-200 dark:border-gray-700"
