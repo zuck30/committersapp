@@ -1,7 +1,5 @@
 import { useEffect, useState } from "react";
 import { Sun, Moon } from "lucide-react";
-import Tippy from "@tippyjs/react";
-import "tippy.js/dist/tippy.css";
 
 export const Switcher = () => {
   const getThemeFromStorage = () => {
@@ -35,26 +33,21 @@ export const Switcher = () => {
   };
 
   return (
-    <Tippy
-      content={isDark ? "Switch to Light" : "Switch to Dark"}
-      placement="bottom"
+    <div
+      onClick={toggle}
+      className="flex items-center justify-center w-10 h-10 rounded-lg cursor-pointer transition-transform duration-300"
     >
-      <div
-        onClick={toggle}
-        className="flex items-center justify-center w-10 h-10 rounded-lg cursor-pointer transition-transform duration-300"
-      >
-        {isDark ? (
-          <Moon
-            size={28}
-            className="text-gray-300 transition-transform duration-500"
-          />
-        ) : (
-          <Sun
-            size={28}
-            className="text-yellow-400 transition-transform duration-500"
-          />
-        )}
-      </div>
-    </Tippy>
+      {isDark ? (
+        <Moon
+          size={28}
+          className="text-gray-300 transition-transform duration-500"
+        />
+      ) : (
+        <Sun
+          size={28}
+          className="text-yellow-400 transition-transform duration-500"
+        />
+      )}
+    </div>
   );
 };

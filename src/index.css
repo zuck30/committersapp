@@ -2,6 +2,19 @@
 @tailwind components;
 @tailwind utilities;
 
+.tippy-box[data-theme~='custom'] {
+  background-color: transparent !important;
+  box-shadow: none !important;
+}
+
+.tippy-box[data-theme~='custom'] > .tippy-content {
+  padding: 0 !important; 
+}
+
+.tippy-box[data-theme~='custom'] > .tippy-arrow {
+  display: none !important;
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;

@@ -180,7 +180,7 @@ export const FilterBar = ({
             rounded-lg shadow-sm
             focus:border-blue-500 focus:ring-2 focus:ring-blue-400 focus:ring-opacity-50
             hover:border-blue-400 hover:shadow-lg
-            transition-all ease-[cubic-bezier(0.25,0.1,0.25,1)] 
+             ease-[cubic-bezier(0.25,0.1,0.25,1)] 
             bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm
             hover:bg-white dark:hover:bg-gray-900
             focus:bg-white dark:focus:bg-gray-900

@@ -46,7 +46,7 @@ export const UserTable = ({ users }: UserTableProps) => {
               return (
                 <TableRow
                   key={user.username}
-                  className={`transition-all duration-200 hover:bg-gray-100 dark:hover:bg-gray-800`}
+                  className={` duration-200 hover:bg-gray-100 dark:hover:bg-gray-800`}
                 >
                   <TableCell className="text-center sticky left-0 backdrop-blur-lg font-medium">
                     {user.rank}

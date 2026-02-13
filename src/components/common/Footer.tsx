@@ -21,7 +21,7 @@ export const Footer = () => {
             className="flex items-center gap-1 px-3 py-1 rounded-full 
                bg-gradient-to-r from-blue-400 to-blue-600 text-white
                hover:from-blue-500 hover:to-blue-700
-               transition-all duration-300 transform hover:scale-105 shadow-lg"
+                duration-300 transform hover:scale-105 shadow-lg"
           >
             <Github size={18} className="animate-pulse" />
             <span className="font-medium">Source code</span>

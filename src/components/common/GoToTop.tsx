@@ -30,7 +30,7 @@ const GoToTop = () => {
         w-12 h-12 rounded-full
         bg-blue-600 hover:bg-blue-700
         text-white shadow-lg
-        transition-all duration-300
+         duration-300
       "
     >
       <ArrowUp className="w-5 h-5" />

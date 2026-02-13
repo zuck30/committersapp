@@ -29,7 +29,7 @@ export const CountryCard = ({
 
   return (
     <Link to={`/${country.slug}`} className="block group">
-      <div className="border rounded-2xl p-5 bg-white dark:bg-gray-900 hover:shadow-xl hover:border-blue-300 dark:hover:border-blue-700 transition-all duration-200 hover:-translate-y-1">
+      <div className="border rounded-2xl p-5 bg-white dark:bg-gray-900 hover:shadow-xl hover:border-blue-300 dark:hover:border-blue-700    hover:-translate-y-1">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-3">
             <div className="relative">
