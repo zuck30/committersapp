@@ -9,9 +9,9 @@ import { CountryCard } from "@/components/common/CountryCard";
 import { useInfiniteScroll } from "@/hooks/useInfiniteScroll";
 import { Search, Globe, ArrowDownAZ, ArrowUpAZ } from "lucide-react";
 import { ContinentNav } from "@/components/common/ContinentNav";
+import GoToTop from "@/components/common/GoToTop";
 
 const COUNTRIES_PER_PAGE = 20;
-
 type SortDirection = "asc" | "desc";
 
 const Home = () => {
@@ -25,6 +25,13 @@ const Home = () => {
   const [isContinentSort, setIsContinentSort] = useState(false);
   const [activeContinent, setActiveContinent] = useState<string>("");
   const [sortOrder, setSortOrder] = useState<SortDirection>("asc");
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => setIsScrolled(window.scrollY > 400);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   const countryToContinent = useMemo(() => {
     const map: Record<string, string> = {};
@@ -36,26 +43,21 @@ const Home = () => {
 
   const filteredCountries = useMemo(() => {
     let filtered = [...allCountries];
-
     if (search.trim()) {
       const query = search.toLowerCase().trim();
       filtered = filtered.filter(
-        (country) =>
-          country.name.toLowerCase().includes(query) ||
-          country.slug.toLowerCase().includes(query),
+        (c) =>
+          c.name.toLowerCase().includes(query) ||
+          c.slug.toLowerCase().includes(query),
       );
     }
-
     filtered.sort((a, b) => {
       const nameA = a.name.toLowerCase();
       const nameB = b.name.toLowerCase();
-      if (sortOrder === "asc") {
-        return nameA.localeCompare(nameB);
-      } else {
-        return nameB.localeCompare(nameA);
-      }
+      return sortOrder === "asc"
+        ? nameA.localeCompare(nameB)
+        : nameB.localeCompare(nameA);
     });
-
     return filtered;
   }, [allCountries, search, sortOrder]);
 
@@ -67,7 +69,6 @@ const Home = () => {
       if (!groups[cont]) groups[cont] = [];
       groups[cont].push(c);
     });
-
     return Object.keys(groups)
       .sort()
       .reduce(
@@ -79,10 +80,10 @@ const Home = () => {
       );
   }, [filteredCountries, isContinentSort, countryToContinent]);
 
-  const visibleCountries = useMemo(() => {
-    return filteredCountries.slice(0, visibleCount);
-  }, [filteredCountries, visibleCount]);
-
+  const visibleCountries = useMemo(
+    () => filteredCountries.slice(0, visibleCount),
+    [filteredCountries, visibleCount],
+  );
   const hasMoreCountries = visibleCount < filteredCountries.length;
 
   useInfiniteScroll({
@@ -94,19 +95,13 @@ const Home = () => {
 
   useEffect(() => {
     if (!isContinentSort || !grouped) return;
-    const observerOptions = {
-      root: null,
-      rootMargin: "-20% 0px -70% 0px",
-      threshold: 0,
-    };
-    const observerCallback = (entries: IntersectionObserverEntry[]) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) setActiveContinent(entry.target.id);
-      });
-    };
     const observer = new IntersectionObserver(
-      observerCallback,
-      observerOptions,
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) setActiveContinent(entry.target.id);
+        });
+      },
+      { rootMargin: "-20% 0px -70% 0px" },
     );
     Object.keys(grouped).forEach((id) => {
       const el = document.getElementById(id);
@@ -130,7 +125,6 @@ const Home = () => {
       <Helmet>
         <title>GitHub Contributors by Country | Global Rankings</title>
       </Helmet>
-
       <div className="mb-[60px] sm:mb-[65px]">
         <Header />
       </div>
@@ -152,7 +146,7 @@ const Home = () => {
 
         <button
           onClick={toggleSort}
-          className="flex items-center justify-center p-[10px] w-[46px] h-[46px] border rounded-2xl bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 transition-all shadow-lg text-gray-600 dark:text-gray-400"
+          className="flex items-center justify-center p-[10px] w-[46px] h-[46px] border rounded-2xl bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 shadow-lg text-gray-600 dark:text-gray-400"
         >
           {sortOrder === "asc" ? (
             <ArrowDownAZ className="w-5 h-5 text-blue-500" />
@@ -167,10 +161,11 @@ const Home = () => {
           grouped={grouped}
           activeContinent={activeContinent}
           scrollToContinent={scrollToContinent}
+          isFloating={false}
         />
       </div>
 
-      <div className="grid grid-cols-3 gap-6 md:grid-cols-1 lg:grid-cols-2 sm:grid-cols-1 ">
+      <div className="grid grid-cols-3 gap-6 md:grid-cols-1 lg:grid-cols-2 sm:grid-cols-1">
         {isContinentSort && grouped ? (
           Object.entries(grouped).map(([continent, countries]) => (
             <div
@@ -180,11 +175,7 @@ const Home = () => {
             >
               <div className="flex items-center gap-4 mb-8 mt-4">
                 <div
-                  className={`p-2.5 rounded-xl transition-colors ${
-                    activeContinent === continent
-                      ? "bg-blue-600 text-white"
-                      : "bg-blue-50 dark:bg-blue-900/20 text-blue-500"
-                  }`}
+                  className={`p-2.5 rounded-xl ${activeContinent === continent ? "bg-blue-600 text-white" : "bg-blue-50 dark:bg-blue-900/20 text-blue-500"}`}
                 >
                   <Globe className="w-4 h-4" />
                 </div>
@@ -210,10 +201,10 @@ const Home = () => {
           ))
         ) : (
           <div className="col-span-3 grid grid-cols-3 gap-6 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1">
-            {visibleCountries.map((country) => (
+            {visibleCountries.map((c) => (
               <CountryCard
-                key={country.slug}
-                country={country}
+                key={c.slug}
+                country={c}
                 onUserClick={setSelectedUser}
               />
             ))}
@@ -221,12 +212,20 @@ const Home = () => {
         )}
       </div>
 
-      {!isContinentSort && hasMoreCountries && (
-        <div className="flex flex-col items-center my-12">
-          <div className="w-10 h-10 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+      {isScrolled && (
+        <div className="hidden sm:flex fixed bottom-[85px] right-6 z-50 flex-col gap-3 animate-fade-in-up">
+          <ContinentNav
+            isContinentSort={isContinentSort}
+            setIsContinentSort={setIsContinentSort}
+            grouped={grouped}
+            activeContinent={activeContinent}
+            scrollToContinent={scrollToContinent}
+            isFloating={true}
+          />
         </div>
       )}
 
+      <GoToTop />
       {selectedUser && (
         <UserDialog
           user={selectedUser}
