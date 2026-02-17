@@ -48,13 +48,11 @@ export const ContinentNav = ({
 
   const handleToggle = (val: boolean) => {
     setIsContinentSort(val);
-    // Force close Tippy when toggled
     setVisible(false);
   };
 
   return (
     <>
-      {/* DESKTOP SIDEBAR */}
       {!isFloating && (
         <div className="block sm:hidden fixed left-6 top-1/2 transform -translate-y-1/2 z-50 bg-white/80 dark:bg-gray-900/80 backdrop-blur-md p-4 border dark:border-gray-800 rounded-3xl shadow-2xl w-44 xl:left-2 lg:w-40">
           <div className="flex items-center justify-between mb-4 pb-2 border-b dark:border-gray-800">
@@ -89,7 +87,6 @@ export const ContinentNav = ({
         </div>
       )}
 
-      {/* TIPPY BUTTON (Next to Search or Floating) */}
       <div className={isFloating ? "block" : "hidden sm:block"}>
         <Tippy
           interactive={true}

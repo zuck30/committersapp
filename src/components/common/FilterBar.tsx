@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
-import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectTrigger,
@@ -8,7 +7,7 @@ import {
   SelectContent,
   SelectItem,
 } from "@/components/ui/select";
-import { RefreshCw, Search, X } from "lucide-react";
+import { RefreshCw } from "lucide-react";
 import { Toast } from "@/components/common";
 import type { Mode, SortOption } from "@/types";
 import { useSearchParams } from "react-router-dom";
@@ -86,13 +85,13 @@ export const FilterBar = ({
             type="single"
             value={mode}
             onValueChange={(val) => val && updateParam("mode", val)}
-            className="flex p-1 bg-gray-200/50 dark:bg-gray-900/90 rounded-xl w-full sm:w-auto"
+            className="flex p-1 bg-gray-200/50 gap-2 dark:bg-gray-900/90 rounded-xl w-full sm:w-auto"
           >
             {["commits", "contributions", "all"].map((v) => (
               <ToggleGroupItem
                 key={v}
                 value={v}
-                className="flex-1 sm:flex-none px-4 py-2 rounded-lg capitalize text-sm font-medium transition-all
+                className="flex-1 sm:flex-none px-8 sm:px-4 py-2 rounded-lg capitalize text-sm font-medium transition-all
                   hover:bg-white/80 dark:hover:bg-gray-800/80 hover:text-blue-600
                   data-[state=on]:bg-white dark:data-[state=on]:bg-gray-800 
                   data-[state=on]:text-blue-600 dark:data-[state=on]:text-blue-400 
@@ -132,26 +131,6 @@ export const FilterBar = ({
               <SelectItem value="alphabetical-desc">Name (Z-A)</SelectItem>
             </SelectContent>
           </Select>
-
-          <div className="relative w-full sm:w-full md:w-[260px]">
-            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-            <Input
-              placeholder="Search user..."
-              value={inputValue}
-              onChange={(e) => setInputValue(e.target.value)}
-              className="h-11 pl-10 pr-10 rounded-xl bg-gray-200/50 dark:bg-gray-900/90 border-none 
-                placeholder:text-gray-500 text-gray-800 dark:text-gray-200 focus-visible:ring-2 focus-visible:ring-blue-500/20"
-            />
-            {inputValue && (
-              <button
-                onClick={() => setInputValue("")}
-                className="absolute right-3 top-1/2 -translate-y-1/2 p-1 rounded-full 
-                  hover:bg-gray-300 dark:hover:bg-gray-800 transition-colors"
-              >
-                <X className="w-3.5 h-3.5 text-gray-400" />
-              </button>
-            )}
-          </div>
         </div>
       </div>
     </div>
