@@ -41,7 +41,7 @@ export const Header = ({ countryName }: HeaderProps) => {
             ) : (
               <div className="flex items-center gap-1.5">
                 <h1 className="text-[26px] font-bold sm:text-[18px] dark:text-gray-50 truncate">
-                  Active GitHub Users in {countryName}
+                  Top GitHub Committers in {countryName}
                 </h1>
                 <Tippy
                   interactive={true}

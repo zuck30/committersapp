@@ -98,12 +98,33 @@ const Country = () => {
       />
     );
 
+  const titleText = `Top GitHub Committers in ${formattedCountryName} (${new Date().getFullYear()})`;
+  const descriptionText = `Discover the most active GitHub users and top contributors in ${formattedCountryName}. Ranking based on public commits and contributions in ${mode} mode.`;
+  const pageUrl = `https://committers.app/${slug}`;
+
   return (
     <div className="max-w-7xl mx-auto p-4 relative min-h-screen">
       <Helmet>
-        <title>Top GitHub Users in {formattedCountryName}</title>
+        <title>{titleText}</title>
+        <meta name="description" content={descriptionText} />
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content={titleText} />
+        <meta property="og:description" content={descriptionText} />
+        <meta property="og:url" content={pageUrl} />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={titleText} />
+        <meta name="twitter:description" content={descriptionText} />
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "ItemList",
+            name: `Top GitHub Users in ${formattedCountryName}`,
+            description: descriptionText,
+            url: pageUrl,
+            numberOfItems: sortedAndFilteredUsers.length,
+          })}
+        </script>
       </Helmet>
-
       <div className="mb-[60px] sm:mb-[65px]">
         <Header countryName={formattedCountryName} />
       </div>
@@ -161,10 +182,25 @@ const Country = () => {
           </div>
         ) : (
           <div className="animate-in fade-in slide-in-from-bottom-4 duration-700">
-            <UserTable users={visibleUsers} />
+            <UserTable
+              users={visibleUsers}
+              countryName={formattedCountryName}
+            />
           </div>
         )}
       </div>
+      <section className="max-w-2xl mt-5 mx-auto mb-8 text-center">
+        <h1 className="text-3xl font-bold mb-4 dark:text-white">
+          GitHub Leaders in {formattedCountryName}
+        </h1>
+        <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
+          Explore the official ranking of developers from{" "}
+          <strong>{formattedCountryName}</strong> based on their GitHub
+          activity. This list showcases the top {sortedAndFilteredUsers.length}{" "}
+          committers, helping you find the most influential open-source
+          contributors in the region.
+        </p>
+      </section>
       <GoToTop />
     </div>
   );

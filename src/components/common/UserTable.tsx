@@ -12,9 +12,10 @@ import { UserDialog } from "./UserDialog";
 
 interface UserTableProps {
   users: Committer[];
+  countryName: string;
 }
 
-export const UserTable = ({ users }: UserTableProps) => {
+export const UserTable = ({ users, countryName }: UserTableProps) => {
   const [selectedUser, setSelectedUser] = useState<Committer | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
 
@@ -71,8 +72,9 @@ export const UserTable = ({ users }: UserTableProps) => {
                   <TableCell className="text-center">
                     <img
                       src={user.avatar || "/placeholder.svg"}
-                      alt={user.username}
-                      className={`w-10 h-10 rounded-full mx-auto border-2 border-gray-200 dark:border-gray-600`}
+                      alt={`${user.username} GitHub profile - Top Committer in ${countryName}`}
+                      className="w-10 h-10 rounded-full mx-auto border-2 border-gray-200 dark:border-gray-600"
+                      loading="lazy"
                     />
                   </TableCell>
                 </TableRow>

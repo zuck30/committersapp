@@ -37,9 +37,9 @@ export const CountryCard = ({
                 <div className="w-10 h-7 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
               ) : flagUrl ? (
                 <img
-                  src={flagUrl}
-                  className="w-10 h-7 rounded border shadow-sm object-cover"
-                  alt={country.name}
+                  src={flagUrl || "https://flagcdn.com/w40/un.png"}
+                  className="w-10 h-7 rounded shadow-sm object-cover border dark:border-gray-800"
+                  alt={`${country.name} flag`}
                   loading="lazy"
                 />
               ) : (
