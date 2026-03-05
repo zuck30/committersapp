@@ -7,12 +7,32 @@ import { UserDialog } from "@/components/common";
 import { Header } from "../components/common/Header";
 import { CountryCard } from "@/components/common/CountryCard";
 import { useInfiniteScroll } from "@/hooks/useInfiniteScroll";
-import { Search, Globe, ArrowDownAZ, ArrowUpAZ } from "lucide-react";
+import { Search, Globe, ArrowDownAZ, ArrowUpAZ, Loader2 } from "lucide-react";
 import { ContinentNav } from "@/components/common/ContinentNav";
 import GoToTop from "@/components/common/GoToTop";
 
 const COUNTRIES_PER_PAGE = 20;
 type SortDirection = "asc" | "desc";
+const HomeLoading = () => (
+  <div className="w-full">
+    <div className="flex flex-col items-center justify-center py-10 animate-pulse">
+      <Loader2 className="w-10 h-10 text-blue-500 animate-spin mb-4" />
+      <h2 className="text-xl font-bold text-gray-600 dark:text-gray-400">
+        Fetching global data...
+      </h2>
+      <p className="text-sm text-gray-400 mt-2">Preparing the leaderboard</p>
+    </div>
+
+    <div className="grid grid-cols-3 gap-6 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1 mt-2">
+      {[...Array(6)].map((_, i) => (
+        <div
+          key={i}
+          className="h-[400px] border rounded-2xl bg-gray-50/50 dark:bg-gray-800/50 animate-pulse border-gray-100 dark:border-gray-800"
+        />
+      ))}
+    </div>
+  </div>
+);
 
 const Home = () => {
   const { data: allCountries = [], isLoading: isLoadingCountries } =
@@ -131,6 +151,7 @@ const Home = () => {
           content="Explore the most active GitHub contributors across all countries. Compare developer activity, commit rankings, and open-source leaders globally."
         />
       </Helmet>
+
       <div className="mb-[60px] sm:mb-[65px]">
         <Header />
       </div>
@@ -161,62 +182,68 @@ const Home = () => {
           )}
         </button>
 
-        <ContinentNav
-          isContinentSort={isContinentSort}
-          setIsContinentSort={setIsContinentSort}
-          grouped={grouped}
-          activeContinent={activeContinent}
-          scrollToContinent={scrollToContinent}
-          isFloating={false}
-        />
-      </div>
-
-      <div className="grid grid-cols-3 gap-6 md:grid-cols-1 lg:grid-cols-2 sm:grid-cols-1">
-        {isContinentSort && grouped ? (
-          Object.entries(grouped).map(([continent, countries]) => (
-            <div
-              key={continent}
-              id={continent}
-              className="col-span-3 scroll-mt-[100px] animate-fade-in-up"
-            >
-              <div className="flex items-center gap-4 mb-8 mt-4">
-                <div
-                  className={`p-2.5 rounded-xl ${activeContinent === continent ? "bg-blue-600 text-white" : "bg-blue-50 dark:bg-blue-900/20 text-blue-500"}`}
-                >
-                  <Globe className="w-4 h-4" />
-                </div>
-                <h2 className="text-2xl font-black dark:text-white uppercase tracking-tight sm:text-lg">
-                  {continent}
-                </h2>
-                <div className="h-[1px] flex-1 bg-gray-200 dark:bg-gray-800"></div>
-                <span className="text-xs font-bold text-gray-400 bg-gray-100 dark:bg-gray-800 px-3 py-1 rounded-full border dark:border-gray-700 whitespace-nowrap">
-                  {countries.length}{" "}
-                  <span className="sm:hidden">countries</span>
-                </span>
-              </div>
-              <div className="grid grid-cols-3 gap-6 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1">
-                {countries.map((c) => (
-                  <CountryCard
-                    key={c.slug}
-                    country={c}
-                    onUserClick={setSelectedUser}
-                  />
-                ))}
-              </div>
-            </div>
-          ))
-        ) : (
-          <div className="col-span-3 grid grid-cols-3 gap-6 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1">
-            {visibleCountries.map((c) => (
-              <CountryCard
-                key={c.slug}
-                country={c}
-                onUserClick={setSelectedUser}
-              />
-            ))}
-          </div>
+        {!isLoadingCountries && (
+          <ContinentNav
+            isContinentSort={isContinentSort}
+            setIsContinentSort={setIsContinentSort}
+            grouped={grouped}
+            activeContinent={activeContinent}
+            scrollToContinent={scrollToContinent}
+            isFloating={false}
+          />
         )}
       </div>
+
+      {isLoadingCountries ? (
+        <HomeLoading />
+      ) : (
+        <div className="grid grid-cols-3 gap-6 md:grid-cols-1 lg:grid-cols-2 sm:grid-cols-1">
+          {isContinentSort && grouped ? (
+            Object.entries(grouped).map(([continent, countries]) => (
+              <div
+                key={continent}
+                id={continent}
+                className="col-span-3 scroll-mt-[100px] animate-fade-in-up"
+              >
+                <div className="flex items-center gap-4 mb-8 mt-4">
+                  <div
+                    className={`p-2.5 rounded-xl ${activeContinent === continent ? "bg-blue-600 text-white" : "bg-blue-50 dark:bg-blue-900/20 text-blue-500"}`}
+                  >
+                    <Globe className="w-4 h-4" />
+                  </div>
+                  <h2 className="text-2xl font-black dark:text-white uppercase tracking-tight sm:text-lg">
+                    {continent}
+                  </h2>
+                  <div className="h-[1px] flex-1 bg-gray-200 dark:bg-gray-800"></div>
+                  <span className="text-xs font-bold text-gray-400 bg-gray-100 dark:bg-gray-800 px-3 py-1 rounded-full border dark:border-gray-700 whitespace-nowrap">
+                    {countries.length}{" "}
+                    <span className="sm:hidden">countries</span>
+                  </span>
+                </div>
+                <div className="grid grid-cols-3 gap-6 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1">
+                  {countries.map((c) => (
+                    <CountryCard
+                      key={c.slug}
+                      country={c}
+                      onUserClick={setSelectedUser}
+                    />
+                  ))}
+                </div>
+              </div>
+            ))
+          ) : (
+            <div className="col-span-3 grid grid-cols-3 gap-6 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1">
+              {visibleCountries.map((c) => (
+                <CountryCard
+                  key={c.slug}
+                  country={c}
+                  onUserClick={setSelectedUser}
+                />
+              ))}
+            </div>
+          )}
+        </div>
+      )}
 
       {isScrolled && (
         <div className="hidden sm:flex fixed bottom-[85px] right-6 z-50 flex-col gap-3 animate-fade-in-up">
