@@ -125,11 +125,12 @@ const Country = () => {
           })}
         </script>
       </Helmet>
+
       <div className="mb-[60px] sm:mb-[65px]">
         <Header countryName={formattedCountryName} />
       </div>
 
-      <div className="max-w-2xl mx-auto flex flex-col gap-3 mb-10">
+      <div className="max-w-2xl mx-auto flex flex-col gap-3">
         <div className="flex items-center gap-3">
           <Link
             to="/"
@@ -181,26 +182,28 @@ const Country = () => {
             </h3>
           </div>
         ) : (
-          <div className="animate-in fade-in slide-in-from-bottom-4 duration-700">
-            <UserTable
-              users={visibleUsers}
-              countryName={formattedCountryName}
-            />
-          </div>
+          <>
+            <div className="animate-in fade-in slide-in-from-bottom-4 duration-700">
+              <UserTable
+                users={visibleUsers}
+                countryName={formattedCountryName}
+              />
+            </div>
+            <section className="max-w-2xl mt-5 mx-auto mb-8 text-center animate-in fade-in duration-1000">
+              <h1 className="text-3xl font-bold mb-4 dark:text-white">
+                GitHub Leaders in {formattedCountryName}
+              </h1>
+              <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
+                Explore the official ranking of developers from{" "}
+                <strong>{formattedCountryName}</strong> based on their GitHub
+                activity. This list showcases the top{" "}
+                {sortedAndFilteredUsers.length} committers, helping you find the
+                most influential open-source contributors in the region.
+              </p>
+            </section>
+          </>
         )}
       </div>
-      <section className="max-w-2xl mt-5 mx-auto mb-8 text-center">
-        <h1 className="text-3xl font-bold mb-4 dark:text-white">
-          GitHub Leaders in {formattedCountryName}
-        </h1>
-        <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
-          Explore the official ranking of developers from{" "}
-          <strong>{formattedCountryName}</strong> based on their GitHub
-          activity. This list showcases the top {sortedAndFilteredUsers.length}{" "}
-          committers, helping you find the most influential open-source
-          contributors in the region.
-        </p>
-      </section>
       <GoToTop />
     </div>
   );
