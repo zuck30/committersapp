@@ -150,6 +150,28 @@ const Home = () => {
           name="description"
           content="Explore the most active GitHub contributors across all countries. Compare developer activity, commit rankings, and open-source leaders globally."
         />
+        <meta
+          name="keywords"
+          content="most active github users, 
+          top github committers,
+           open source rankings,
+            developer leaderboard,
+             github contributors by country, most commits github, top developers worldwide, github hall of fame, leading open source developers, top github profiles, github contribution statistics, global developer rankings, most active coders, github stars leaderboard, github commit leaders"
+        />
+        <meta
+          property="og:title"
+          content="Global Ranking of Top GitHub Committers - See the Most Active Developers by Country"
+        />
+        <meta
+          property="og:description"
+          content="Explore the most active GitHub contributors across all countries. Compare developer activity, commit rankings, and open-source leaders globally."
+        />
+        <meta property="og:type" content="website" />
+        <meta
+          property="og:image"
+          content="https://committers.app/preview_image.png"
+        />
+        <meta property="og:url" content="https://committers.app/" />
       </Helmet>
 
       <div className="mb-[60px] sm:mb-[65px]">
