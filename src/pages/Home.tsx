@@ -16,14 +16,14 @@ type SortDirection = "asc" | "desc";
 const HomeLoading = () => (
   <div className="w-full">
     <div className="flex flex-col items-center justify-center py-10 animate-pulse">
-      <Loader2 className="w-10 h-10 text-blue-500 animate-spin mb-4" />
+      <Loader2 className="w-10 h-10 mb-4 text-blue-500 animate-spin" />
       <h2 className="text-xl font-bold text-gray-600 dark:text-gray-400">
         Fetching global data...
       </h2>
-      <p className="text-sm text-gray-400 mt-2">Preparing the leaderboard</p>
+      <p className="mt-2 text-sm text-gray-400">Preparing the leaderboard</p>
     </div>
 
-    <div className="grid grid-cols-3 gap-6 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1 mt-2">
+    <div className="grid grid-cols-3 gap-6 mt-2 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1">
       {[...Array(6)].map((_, i) => (
         <div
           key={i}
@@ -141,7 +141,7 @@ const Home = () => {
   };
 
   return (
-    <div className="max-w-7xl mx-auto p-4 relative min-h-screen">
+    <div className="relative min-h-screen p-4 mx-auto max-w-7xl">
       <Helmet>
         <title>
           Top GitHub Committers Worldwide - Global Ranking by Country
@@ -174,13 +174,17 @@ const Home = () => {
         <meta property="og:url" content="https://committers.app/" />
       </Helmet>
 
+      <h1 className="sr-only">
+        Top GitHub Committers Worldwide - Global Ranking by Country
+      </h1>
+
       <div className="mb-[60px] sm:mb-[65px]">
         <Header />
       </div>
 
-      <div className="mb-5 flex items-center justify-center gap-3 max-w-2xl mx-auto">
+      <div className="flex items-center justify-center max-w-2xl gap-3 mx-auto mb-5">
         <div className="relative flex-1">
-          <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+          <Search className="absolute w-5 h-5 text-gray-400 transform -translate-y-1/2 left-4 top-1/2" />
           <input
             type="text"
             value={search}
@@ -227,17 +231,17 @@ const Home = () => {
                 id={continent}
                 className="col-span-3 scroll-mt-[100px] animate-fade-in-up"
               >
-                <div className="flex items-center gap-4 mb-8 mt-4">
+                <div className="flex items-center gap-4 mt-4 mb-8">
                   <div
                     className={`p-2.5 rounded-xl ${activeContinent === continent ? "bg-blue-600 text-white" : "bg-blue-50 dark:bg-blue-900/20 text-blue-500"}`}
                   >
                     <Globe className="w-4 h-4" />
                   </div>
-                  <h2 className="text-2xl font-black dark:text-white uppercase tracking-tight sm:text-lg">
+                  <h2 className="text-2xl font-black tracking-tight uppercase dark:text-white sm:text-lg">
                     {continent}
                   </h2>
                   <div className="h-[1px] flex-1 bg-gray-200 dark:bg-gray-800"></div>
-                  <span className="text-xs font-bold text-gray-400 bg-gray-100 dark:bg-gray-800 px-3 py-1 rounded-full border dark:border-gray-700 whitespace-nowrap">
+                  <span className="px-3 py-1 text-xs font-bold text-gray-400 bg-gray-100 border rounded-full dark:bg-gray-800 dark:border-gray-700 whitespace-nowrap">
                     {countries.length}{" "}
                     <span className="sm:hidden">countries</span>
                   </span>
@@ -254,7 +258,7 @@ const Home = () => {
               </div>
             ))
           ) : (
-            <div className="col-span-3 grid grid-cols-3 gap-6 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1">
+            <div className="grid grid-cols-3 col-span-3 gap-6 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1">
               {visibleCountries.map((c) => (
                 <CountryCard
                   key={c.slug}

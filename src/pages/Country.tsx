@@ -103,7 +103,7 @@ const Country = () => {
   const pageUrl = `https://committers.app/${slug}`;
 
   return (
-    <div className="max-w-7xl mx-auto p-4 relative min-h-screen">
+    <div className="relative min-h-screen p-4 mx-auto max-w-7xl">
       <Helmet>
         <title>{titleText}</title>
         <meta name="description" content={descriptionText} />
@@ -126,11 +126,15 @@ const Country = () => {
         </script>
       </Helmet>
 
+      <h1 className="sr-only">
+        Top GitHub Users and Committers in {formattedCountryName}
+      </h1>
+
       <div className="mb-[60px] sm:mb-[65px]">
         <Header countryName={formattedCountryName} />
       </div>
 
-      <div className="max-w-2xl mx-auto flex flex-col gap-3">
+      <div className="flex flex-col max-w-2xl gap-3 mx-auto">
         <div className="flex items-center gap-3">
           <Link
             to="/"
@@ -140,7 +144,7 @@ const Country = () => {
           </Link>
 
           <div className="relative flex-1">
-            <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+            <Search className="absolute w-5 h-5 text-gray-400 transform -translate-y-1/2 left-4 top-1/2" />
             <input
               type="text"
               value={searchQuery}
@@ -151,7 +155,7 @@ const Country = () => {
             {searchQuery && (
               <button
                 onClick={() => handleSearchChange("")}
-                className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors"
+                className="absolute text-gray-400 transition-colors transform -translate-y-1/2 right-4 top-1/2 hover:text-gray-600 dark:hover:text-gray-200"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -169,13 +173,13 @@ const Country = () => {
 
       <div className="w-full">
         {isFetching && localData.length === 0 ? (
-          <div className="py-32 flex flex-col items-center">
+          <div className="flex flex-col items-center py-32">
             <LoadingSpinner />
           </div>
         ) : error ? (
           <ErrorMessage title="Update Failed" message="Could not reach API." />
         ) : sortedAndFilteredUsers.length === 0 ? (
-          <div className="text-center py-24 bg-gray-50 dark:bg-gray-900/50 rounded-3xl border-2 border-dashed border-gray-200 dark:border-gray-800">
+          <div className="py-24 text-center border-2 border-gray-200 border-dashed bg-gray-50 dark:bg-gray-900/50 rounded-3xl dark:border-gray-800">
             <SearchX className="w-20 h-20 mx-auto mb-6 text-gray-300" />
             <h3 className="text-xl font-semibold text-gray-800 dark:text-gray-200">
               No results found
@@ -183,17 +187,17 @@ const Country = () => {
           </div>
         ) : (
           <>
-            <div className="animate-in fade-in slide-in-from-bottom-4 duration-700">
+            <div className="duration-700 animate-in fade-in slide-in-from-bottom-4">
               <UserTable
                 users={visibleUsers}
                 countryName={formattedCountryName}
               />
             </div>
-            <section className="max-w-2xl mt-5 mx-auto mb-8 text-center animate-in fade-in duration-1000">
-              <h1 className="text-3xl font-bold mb-4 dark:text-white">
+            <section className="max-w-2xl mx-auto mt-5 mb-8 text-center duration-1000 animate-in fade-in">
+              <h2 className="mb-4 text-3xl font-bold dark:text-white">
                 GitHub Leaders in {formattedCountryName}
-              </h1>
-              <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
+              </h2>
+              <p className="leading-relaxed text-gray-600 dark:text-gray-400">
                 Explore the official ranking of developers from{" "}
                 <strong>{formattedCountryName}</strong> based on their GitHub
                 activity. This list showcases the top{" "}
