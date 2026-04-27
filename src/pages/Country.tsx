@@ -14,6 +14,7 @@ import { skipToken } from "@reduxjs/toolkit/query/react";
 import { useInfiniteScroll } from "@/hooks/useInfiniteScroll";
 import { ArrowLeft, Search, SearchX, X } from "lucide-react";
 import GoToTop from "@/components/common/GoToTop";
+import { getDynamicDescription, SEO_KEYWORDS } from "./constants";
 
 const PAGE_SIZE = 20;
 
@@ -98,14 +99,28 @@ const Country = () => {
       />
     );
 
-  const titleText = `Top GitHub Committers in ${formattedCountryName} (${new Date().getFullYear()})`;
-  const descriptionText = `Discover the most active GitHub users and top contributors in ${formattedCountryName}. Ranking based on public commits and contributions in ${mode} mode.`;
+  const currentYear = new Date().getFullYear();
+  const titleText = `Top GitHub Committers in ${formattedCountryName} (${currentYear}) — Most Active Users`;
+  const descriptionText = getDynamicDescription(
+    formattedCountryName,
+    sortedAndFilteredUsers.length,
+    currentYear,
+  );
+
+  const keywordsText = [
+    ...SEO_KEYWORDS.map((k) => `${k} in ${formattedCountryName}`),
+    `best developers in ${formattedCountryName}`,
+    `${formattedCountryName} github ranking`,
+    `top programmers ${formattedCountryName}`,
+  ].join(", ");
+
   const pageUrl = `https://committers.app/${slug}`;
 
   return (
     <div className="relative min-h-screen p-4 mx-auto max-w-7xl">
       <Helmet>
         <title>{titleText}</title>
+        <meta name="keywords" content={keywordsText} />
         <meta name="description" content={descriptionText} />
         <meta property="og:type" content="website" />
         <meta property="og:title" content={titleText} />
@@ -117,11 +132,32 @@ const Country = () => {
         <script type="application/ld+json">
           {JSON.stringify({
             "@context": "https://schema.org",
-            "@type": "ItemList",
-            name: `Top GitHub Users in ${formattedCountryName}`,
+            "@type": "WebPage",
+            name: titleText,
             description: descriptionText,
-            url: pageUrl,
-            numberOfItems: sortedAndFilteredUsers.length,
+            breadcrumb: {
+              "@type": "BreadcrumbList",
+              itemListElement: [
+                {
+                  "@type": "ListItem",
+                  position: 1,
+                  name: "Home",
+                  item: "https://committers.app/",
+                },
+                {
+                  "@type": "ListItem",
+                  position: 2,
+                  name: formattedCountryName,
+                  item: pageUrl,
+                },
+              ],
+            },
+            mainEntity: {
+              "@type": "ItemList",
+              name: `Top GitHub Users in ${formattedCountryName}`,
+              numberOfItems: sortedAndFilteredUsers.length,
+              itemListOrder: "https://schema.org/ItemListOrderDescending",
+            },
           })}
         </script>
       </Helmet>
@@ -193,16 +229,26 @@ const Country = () => {
                 countryName={formattedCountryName}
               />
             </div>
-            <section className="max-w-2xl mx-auto mt-5 mb-8 text-center duration-1000 animate-in fade-in">
+            <section className="max-w-2xl mx-auto mt-10 mb-12 text-center duration-1000 animate-in fade-in">
               <h2 className="mb-4 text-3xl font-bold dark:text-white">
-                GitHub Leaders in {formattedCountryName}
+                Most Active GitHub Users in {formattedCountryName}
               </h2>
               <p className="leading-relaxed text-gray-600 dark:text-gray-400">
-                Explore the official ranking of developers from{" "}
-                <strong>{formattedCountryName}</strong> based on their GitHub
-                activity. This list showcases the top{" "}
-                {sortedAndFilteredUsers.length} committers, helping you find the
-                most influential open-source contributors in the region.
+                Looking for the <strong>top github contributors</strong> in{" "}
+                <strong>{formattedCountryName}</strong>? Our real-time
+                leaderboard analytics showcase the{" "}
+                <strong>best software engineers</strong> and
+                <strong>tech talent</strong> in the region for {currentYear}.
+              </p>
+              <p className="mt-4 leading-relaxed text-gray-600 dark:text-gray-400">
+                This ranking includes the top {sortedAndFilteredUsers.length}{" "}
+                <strong>open source contributors</strong>
+                and <strong>software development leaders</strong>, ranked by
+                their public <strong>coding activity</strong>
+                and <strong>commit history</strong>. It is the most
+                comprehensive
+                <strong> github ranking statistics</strong> for developers in{" "}
+                {formattedCountryName} today.
               </p>
             </section>
           </>

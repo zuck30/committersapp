@@ -20,7 +20,7 @@ export const Header = ({ countryName }: HeaderProps) => {
           <div className="flex items-center gap-1.5 min-w-0">
             {isHomePage ? (
               <div className="flex items-center gap-1.5">
-                <p className="text-[26px] font-bold sm:text-[16px] dark:text-gray-50 truncate">
+                <p className="text-[26px] font-bold sm:text-[12px] dark:text-gray-50 truncate">
                   Top GitHub Contributors Worldwide
                 </p>
                 <Tippy
