@@ -11,7 +11,12 @@ interface RestCountryResponse {
   data: {
     objects: Array<{
       names?: { common?: string };
-      flag?: { png?: string; svg?: string };
+      codes?: { alpha_2?: string; alpha_3?: string };
+      flag?: {
+        url_png?: string;
+        url_svg?: string;
+        emoji?: string;
+      };
       continents?: string[];
     }>;
   };
@@ -28,14 +33,22 @@ export const flagsApi = createApi({
 
         if (!Array.isArray(countriesList)) return [];
 
-        return countriesList.map((c) => ({
-          name: c.names?.common || "Unknown",
-          flagUrl: c.flag?.png || "",
-          continent:
-            c.continents && c.continents.length > 0
-              ? c.continents[0]
-              : "Unknown",
-        }));
+        return countriesList.map((c) => {
+          const countryCode = c.codes?.alpha_2?.toLowerCase() || "";
+          let flagUrl = c.flag?.url_png || c.flag?.url_svg || "";
+          if (!flagUrl && countryCode) {
+            flagUrl = `https://flagcdn.com/w40/${countryCode}.png`;
+          }
+
+          return {
+            name: c.names?.common || "Unknown",
+            flagUrl: flagUrl,
+            continent:
+              c.continents && c.continents.length > 0
+                ? c.continents[0]
+                : "Unknown",
+          };
+        });
       },
     }),
   }),
