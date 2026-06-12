@@ -13,6 +13,7 @@ import GoToTop from "@/components/common/GoToTop";
 
 const COUNTRIES_PER_PAGE = 20;
 type SortDirection = "asc" | "desc";
+
 const HomeLoading = () => (
   <div className="w-full">
     <div className="flex flex-col items-center justify-center py-10 animate-pulse">
@@ -31,6 +32,22 @@ const HomeLoading = () => (
         />
       ))}
     </div>
+  </div>
+);
+
+const EmptyState = ({ searchQuery }: { searchQuery: string }) => (
+  <div className="flex flex-col items-center justify-center col-span-3 py-16 text-center animate-fade-in">
+    <div className="p-4 mb-4 text-gray-400 rounded-full bg-gray-50 dark:bg-gray-800/50 dark:text-gray-600">
+      <Search className="w-8 h-8" />
+    </div>
+    <h3 className="text-xl font-bold text-gray-800 dark:text-gray-200">
+      Nothing found
+    </h3>
+    <p className="max-w-xs mt-2 text-sm text-gray-400">
+      No countries found matching{" "}
+      <span className="font-semibold text-blue-500">"{searchQuery}"</span>.
+      Please check your spelling or try another search.
+    </p>
   </div>
 );
 
@@ -158,11 +175,7 @@ const Home = () => {
         />
         <meta
           name="keywords"
-          content="most active github users, 
-          top github committers,
-           open source rankings,
-            developer leaderboard,
-             github contributors by country, most commits github, top developers worldwide, github hall of fame, leading open source developers, top github profiles, github contribution statistics, global developer rankings, most active coders, github stars leaderboard, github commit leaders"
+          content="most active github users, top github committers, open source rankings, developer leaderboard, github contributors by country, most commits github, top developers worldwide, github hall of fame, leading open source developers, top github profiles, github contribution statistics, global developer rankings, most active coders, github stars leaderboard, github commit leaders"
         />
         <meta
           property="og:title"
@@ -228,6 +241,10 @@ const Home = () => {
 
       {isLoadingCountries ? (
         <HomeLoading />
+      ) : filteredCountries.length === 0 ? (
+        <div className="grid grid-cols-3 gap-6 md:grid-cols-1 lg:grid-cols-2 sm:grid-cols-1">
+          <EmptyState searchQuery={search} />
+        </div>
       ) : (
         <div className="grid grid-cols-3 gap-6 md:grid-cols-1 lg:grid-cols-2 sm:grid-cols-1">
           {isContinentSort && grouped ? (
