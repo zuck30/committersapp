@@ -29,37 +29,37 @@ export const CountryCard = ({
 
   return (
     <Link to={`/${country.slug}`} className="block group">
-      <div className="border rounded-2xl p-5 bg-white dark:bg-gray-900 hover:shadow-xl hover:border-blue-300 dark:hover:border-blue-700    hover:-translate-y-1">
+      <div className="p-5 bg-white border rounded-2xl dark:bg-gray-900 hover:shadow-xl hover:border-blue-300 dark:hover:border-blue-700 hover:-translate-y-1">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-3">
             <div className="relative">
               {isLoading ? (
-                <div className="w-10 h-7 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
+                <div className="w-10 bg-gray-200 rounded h-7 dark:bg-gray-700 animate-pulse"></div>
               ) : flagUrl ? (
                 <img
                   src={flagUrl || "https://flagcdn.com/w40/un.png"}
-                  className="w-10 h-7 rounded shadow-sm object-cover border dark:border-gray-800"
+                  className="object-cover w-10 border rounded shadow-sm h-7 dark:border-gray-800"
                   alt={`${country.name} flag`}
                   loading="lazy"
                 />
               ) : (
-                <div className="w-10 h-7 bg-gradient-to-r from-blue-100 to-indigo-100 dark:from-gray-800 dark:to-gray-700 rounded border flex items-center justify-center">
+                <div className="flex items-center justify-center w-10 border rounded h-7 bg-gradient-to-r from-blue-100 to-indigo-100 dark:from-gray-800 dark:to-gray-700">
                   <span className="text-xs font-bold text-gray-500">🏳️</span>
                 </div>
               )}
               {!isLoading && (
-                <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full border-2 border-white dark:border-gray-900"></div>
+                <div className="absolute w-4 h-4 border-2 border-white rounded-full -bottom-1 -right-1 bg-gradient-to-r from-blue-500 to-indigo-500 dark:border-gray-900"></div>
               )}
             </div>
             <div>
               {isLoading ? (
                 <>
-                  <div className="h-6 w-32 bg-gray-200 dark:bg-gray-700 rounded mb-1 animate-pulse"></div>
-                  <div className="h-4 w-20 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
+                  <div className="w-32 h-6 mb-1 bg-gray-200 rounded dark:bg-gray-700 animate-pulse"></div>
+                  <div className="w-20 h-4 bg-gray-200 rounded dark:bg-gray-700 animate-pulse"></div>
                 </>
               ) : (
                 <>
-                  <h3 className="font-bold text-lg text-gray-800 dark:text-gray-100 group-hover:text-blue-600 dark:group-hover:text-blue-400">
+                  <h3 className="text-lg font-bold text-gray-800 dark:text-gray-100 group-hover:text-blue-600 dark:group-hover:text-blue-400">
                     {country.name}
                   </h3>
                   <p className="text-xs text-gray-500 dark:text-gray-400">
@@ -73,7 +73,7 @@ export const CountryCard = ({
           {isLoading ? (
             <div className="w-[60px] h-[30px] bg-gray-200 dark:bg-gray-700 rounded-full animate-pulse"></div>
           ) : totalUsers > 0 ? (
-            <div className="px-3 py-1 bg-gradient-to-r from-blue-50 to-teal-50 dark:from-blue-900/20 dark:to-teal-900/20 rounded-full">
+            <div className="px-3 py-1 rounded-full bg-gradient-to-r from-blue-50 to-teal-50 dark:from-blue-900/20 dark:to-teal-900/20">
               <Tippy
                 content={
                   <span className="text-sm text-gray-800 dark:text-gray-200">
@@ -93,7 +93,7 @@ export const CountryCard = ({
               </Tippy>
             </div>
           ) : (
-            <div className="px-3 py-1 bg-gradient-to-r from-blue-50 to-teal-50 dark:from-blue-900/20 dark:to-teal-900/20 rounded-full">
+            <div className="px-3 py-1 rounded-full bg-gradient-to-r from-blue-50 to-teal-50 dark:from-blue-900/20 dark:to-teal-900/20">
               <Tippy
                 content="No data available"
                 className="!bg-gray-100 dark:!bg-gray-800 !border !border-gray-200 dark:!border-gray-700 !text-gray-800 dark:!text-gray-200"
@@ -105,11 +105,11 @@ export const CountryCard = ({
           )}
         </div>
 
-        <div className="flex items-center justify-between mb-5 px-1">
+        <div className="flex items-center justify-between px-1 mb-5">
           {isLoading ? (
             <div className="h-4 w-[90px] bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
           ) : (
-            <span className="text-sm font-medium  flex items-center gap-1 text-gray-700 dark:text-gray-300">
+            <span className="flex items-center gap-1 text-sm font-medium text-gray-700 dark:text-gray-300">
               <Users className="w-4 h-4 text-gray-400" />
               {totalUsers} devs
             </span>
@@ -117,7 +117,7 @@ export const CountryCard = ({
           {isLoading ? (
             <div className="h-4 w-[130px] bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
           ) : (
-            <span className="text-sm font-medium flex items-center gap-1 text-gray-700 dark:text-gray-300">
+            <span className="flex items-center gap-1 text-sm font-medium text-gray-700 dark:text-gray-300">
               <GitCommit className="w-4 h-4 text-gray-400" />
               {totalCommits.toLocaleString()} commits
             </span>
@@ -126,7 +126,7 @@ export const CountryCard = ({
 
         <div className="space-y-3">
           {isLoading ? (
-            <div className="h-4 w-28 bg-gray-200 dark:bg-gray-700 rounded mx-auto animate-pulse"></div>
+            <div className="h-4 mx-auto bg-gray-200 rounded w-28 dark:bg-gray-700 animate-pulse"></div>
           ) : (
             <div className="flex items-center gap-2">
               <div className="w-full h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent dark:via-gray-700"></div>
@@ -142,13 +142,13 @@ export const CountryCard = ({
               {[...Array(3)].map((_, i) => (
                 <div key={i} className="flex items-center justify-between p-2">
                   <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-full bg-gray-200 dark:bg-gray-700 animate-pulse"></div>
+                    <div className="w-8 h-8 bg-gray-200 rounded-full dark:bg-gray-700 animate-pulse"></div>
                     <div>
-                      <div className="h-4 w-24 bg-gray-200 dark:bg-gray-700 rounded mb-1 animate-pulse"></div>
-                      <div className="h-3 w-16 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
+                      <div className="w-24 h-4 mb-1 bg-gray-200 rounded dark:bg-gray-700 animate-pulse"></div>
+                      <div className="w-16 h-3 bg-gray-200 rounded dark:bg-gray-700 animate-pulse"></div>
                     </div>
                   </div>
-                  <div className="w-4 h-4 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
+                  <div className="w-4 h-4 bg-gray-200 rounded dark:bg-gray-700 animate-pulse"></div>
                 </div>
               ))}
             </div>
@@ -162,13 +162,13 @@ export const CountryCard = ({
                     e.stopPropagation();
                     onUserClick(user);
                   }}
-                  className="flex items-center justify-between p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer transition-colors"
+                  className="flex items-center justify-between p-2 transition-colors rounded-lg cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800"
                 >
                   <div className="flex items-center gap-3">
                     <div className="relative">
                       <img
                         src={user.avatar}
-                        className="w-8 h-8 rounded-full border-2 border-white dark:border-gray-800 shadow-sm"
+                        className="w-8 h-8 border-2 border-white rounded-full shadow-sm dark:border-gray-800"
                         alt={user.username}
                         loading="lazy"
                       />
@@ -183,10 +183,10 @@ export const CountryCard = ({
                       ></div>
                     </div>
                     <div>
-                      <p className="font-medium text-sm text-gray-800 dark:text-gray-200">
+                      <p className="text-sm font-medium text-gray-800 dark:text-gray-200">
                         {user.username}
                       </p>
-                      <p className="text-xs text-gray-500 flex items-center gap-1">
+                      <p className="flex items-center gap-1 text-xs text-gray-500">
                         <GitCommit className="w-3 h-3" />
                         {user.commits.toLocaleString()} commits
                       </p>
@@ -216,17 +216,17 @@ export const CountryCard = ({
         </div>
 
         {isLoading ? (
-          <div className="mt-5 pt-4 border-t border-gray-100 dark:border-gray-800">
+          <div className="pt-4 mt-5 border-t border-gray-100 dark:border-gray-800">
             <div className="flex items-center justify-center">
               <div className="h-6 w-[180px] bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
             </div>
           </div>
         ) : (
           totalUsers > 0 && (
-            <div className="mt-5 pt-4 border-t border-gray-100 dark:border-gray-800">
-              <div className="flex items-center justify-center gap-2 text-blue-600 dark:text-blue-400 text-sm font-medium group-hover:underline">
+            <div className="pt-4 mt-5 border-t border-gray-100 dark:border-gray-800">
+              <div className="flex items-center justify-center gap-2 text-sm font-medium text-blue-600 dark:text-blue-400 group-hover:underline">
                 <span>View all contributors</span>
-                <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                <ChevronRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
               </div>
             </div>
           )

@@ -38,6 +38,7 @@ const Home = () => {
   const { data: allCountries = [], isLoading: isLoadingCountries } =
     useGetCountriesQuery();
   const { data: flagsData = [] } = useGetFlagsQuery();
+  console.log("Flags data:", flagsData);
 
   const [selectedUser, setSelectedUser] = useState<Committer | null>(null);
   const [visibleCount, setVisibleCount] = useState(COUNTRIES_PER_PAGE);

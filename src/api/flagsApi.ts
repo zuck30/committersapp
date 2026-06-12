@@ -1,4 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { API_BASE_URL } from "./config";
 
 export interface FlagData {
   name: string;
@@ -7,22 +8,33 @@ export interface FlagData {
 }
 
 interface RestCountryResponse {
-  name: { common: string };
-  flags?: { png?: string; svg?: string };
-  continents?: string[];
+  data: {
+    objects: Array<{
+      names?: { common?: string };
+      flag?: { png?: string; svg?: string };
+      continents?: string[];
+    }>;
+  };
 }
 
 export const flagsApi = createApi({
   reducerPath: "flagsApi",
-  baseQuery: fetchBaseQuery({ baseUrl: "https://restcountries.com/v3.1/" }),
+  baseQuery: fetchBaseQuery({ baseUrl: API_BASE_URL }),
   endpoints: (builder) => ({
     getFlags: builder.query<FlagData[], void>({
-      query: () => "all?fields=name,flags,continents",
-      transformResponse: (data: RestCountryResponse[]) => {
-        return data.map((c) => ({
-          name: c.name.common,
-          flagUrl: c.flags?.png || "",
-          continent: c.continents ? c.continents[0] : "Unknown",
+      query: () => "flags",
+      transformResponse: (response: RestCountryResponse) => {
+        const countriesList = response?.data?.objects;
+
+        if (!Array.isArray(countriesList)) return [];
+
+        return countriesList.map((c) => ({
+          name: c.names?.common || "Unknown",
+          flagUrl: c.flag?.png || "",
+          continent:
+            c.continents && c.continents.length > 0
+              ? c.continents[0]
+              : "Unknown",
         }));
       },
     }),
