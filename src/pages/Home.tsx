@@ -56,9 +56,14 @@ const Home = () => {
 
   const countryToContinent = useMemo(() => {
     const map: Record<string, string> = {};
-    flagsData.forEach((item) => {
-      if (item.name && item.continent) map[item.name] = item.continent;
-    });
+
+    if (Array.isArray(flagsData)) {
+      flagsData.forEach((item) => {
+        if (item.name && item.continent) {
+          map[item.name.toLowerCase()] = item.continent;
+        }
+      });
+    }
     return map;
   }, [flagsData]);
 
@@ -86,7 +91,7 @@ const Home = () => {
     if (!isContinentSort) return null;
     const groups: Record<string, typeof allCountries> = {};
     filteredCountries.forEach((c) => {
-      const cont = countryToContinent[c.name] || "Other";
+      const cont = countryToContinent[c.name.toLowerCase()] || "Other";
       if (!groups[cont]) groups[cont] = [];
       groups[cont].push(c);
     });

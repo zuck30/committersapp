@@ -4,6 +4,7 @@ import { useGetFlagsQuery } from "@/api/flagsApi";
 import type { Committer } from "@/types";
 import { Users, GitCommit, Medal, ChevronRight } from "lucide-react";
 import Tippy from "@tippyjs/react";
+import { useMemo } from "react";
 
 export const CountryCard = ({
   country,
@@ -18,9 +19,13 @@ export const CountryCard = ({
   });
 
   const { data: flags } = useGetFlagsQuery();
-  const flagUrl = flags?.find(
-    (f) => f.name.toLowerCase() === country.name.toLowerCase(),
-  )?.flagUrl;
+  const flagUrl = useMemo(() => {
+    if (!flags || !Array.isArray(flags)) return undefined;
+
+    return flags.find(
+      (f) => f.name && f.name.toLowerCase() === country.name.toLowerCase(),
+    )?.flagUrl;
+  }, [flags, country.name]);
 
   const topUsers = data?.users?.slice(0, 3) || [];
   const totalUsers = data?.users?.length || 0;
