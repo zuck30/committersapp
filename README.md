@@ -1,3 +1,4 @@
+
 <p align="center">
     <a href="https://github.com/SuhrobKholmurodov/committerstop-tj"><img src="https://img.shields.io/badge/status-active-brightgreen.svg"></a>
     <a href="https://github.com/SuhrobKholmurodov/committerstop-tj/graphs/contributors"><img src="https://img.shields.io/github/contributors/SuhrobKholmurodov/committerstop-tj?color=blue"></a>
@@ -6,10 +7,10 @@
     <img src="https://visitor-badge.laobi.icu/badge?page_id=SuhrobKholmurodov.committerstop-tj" alt="visitors"/>   
 </p>
 
-![Banner](https://capsule-render.vercel.app/api?type=venom&height=200&color=0:ff6b6b,100:4ecdc4&text=%20TajikGitHub&textBg=false&desc=(Top%20Active%20Developers%20in%20Tajikistan)&descAlign=79&fontAlign=50&descAlignY=70&fontColor=f7f5f5)
+![Banner](https://capsule-render.vercel.app/api?type=venom&height=200&color=0:ff6b6b,100:4ecdc4&text=%20GitHub%20Committers&textBg=false&desc=(Top%20Active%20Developers%20Worldwide)&descAlign=79&fontAlign=50&descAlignY=70&fontColor=f7f5f5)
 
 <p align="center">
-TajikGitHub is a responsive web application that displays the most active GitHub users in Tajikistan, ranked by commits, contributions, or overall activity. The frontend is built with React and TypeScript, using Redux Toolkit Query for data fetching and state management.
+GitHub Committers is a responsive web application that displays the most active GitHub users worldwide, ranked by commits, contributions, or overall activity. The frontend is built with React and TypeScript, using Redux Toolkit Query for data fetching and state management.
 </p>
 
 
@@ -31,13 +32,14 @@ TajikGitHub is a responsive web application that displays the most active GitHub
 
 <h2>🚀Features</h2>
 
-- 📊 View rankings of top active GitHub users
+- 📊 View rankings of top active GitHub users worldwide
 - 🔄 Switch between Commits, Contributions, and All tabs
 - 🔍 Search users by username
 - 🖼 View user details and avatars
 - ⚡ Data updates dynamically with loading indicators
 - 🌙 Toggle dark/light mode
 - 🔔 Toast notifications for user interactions
+- 🌍 Global leaderboard showcasing developers from around the world
 
 <h2 id=setup>Quick Start</h2>
 
@@ -70,7 +72,7 @@ TajikGitHub is a responsive web application that displays the most active GitHub
 
 - **Committers Data**  
   Scraped live from [committers.top](https://committers.top) using Redux Toolkit Query.  
-  Fetches HTML via `https://api.allorigins.win/raw?url=...` to bypass CORS and parses it to extract rankings.
+  Fetches HTML via `https://api.allorigins.win/raw?url=...` to bypass CORS and parses it to extract rankings of global developers.
 
 - **GitHub User Details**  
   Pulled directly from the GitHub REST API.  
@@ -79,6 +81,7 @@ TajikGitHub is a responsive web application that displays the most active GitHub
 <h2 id=contributing>🤝 Contributing</h2>
 
 If you have any ideas, suggestions, or improvements, feel free to contribute by opening issues or submitting pull requests. Your help is always welcome!
+
 
 <h2 id=license>License</h2>
 
